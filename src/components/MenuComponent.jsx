@@ -36,7 +36,13 @@ export default class MenuComponent extends Component {
                                     <NavLink className="nav-link active" aria-current="page" to="/">Home</NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink className="nav-link" to="/doctores/22">Doctores</NavLink>
+                                    <NavLink className="nav-link active" aria-current="page" to="/ejemploservice">Ejemplo Service</NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink className="nav-link" to="hospitales">Hospitales</NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink className="nav-link" to="/createhospital">Crear Hospital</NavLink>
                                 </li>
                                 <li className="nav-item dropdown">
                                     <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -46,14 +52,11 @@ export default class MenuComponent extends Component {
                                         {
                                             this.state.hospitales.map((hosp, index) => {
                                                 return (
-                                                    <NavLink className="dropdown-item" to={"/doctores/" + hosp.idHospital }>{hosp.nombre}</NavLink>
-                                                    )
+                                                    <NavLink className="dropdown-item" to={"/doctores/" + hosp.idHospital} key={index}>{hosp.nombre}</NavLink>
+                                                )
                                             })
                                         }
                                     </ul>
-                                </li>
-                                <li className="nav-item">
-                                    <a className="nav-link disabled" aria-disabled="true">Disabled</a>
                                 </li>
                             </ul>
                         </div>

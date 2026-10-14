@@ -2,21 +2,24 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import Global from '../Global';
 import DetallesDoctor from './DetallesDoctor';
+import ServiceHospitales from '../services/ServiceHospitales';
 
 export default class DoctoresComponent extends Component {
 
+    service = new ServiceHospitales();
+
     url = Global.urlApiDoctores;
     state = {
-        doctores: []
+        doctores: [],
+        idDoctor: ""
     }
 
     cargarDoctores = () => {
-        let request = "api/doctores/doctoreshospital/" + this.props.idhospital;
-        axios.get(this.url + request).then((response) => {
+        this.service.getDoctoresHospital(this.props.idhospital).then((result => {
             this.setState({
-                doctores: response.data
+                doctores: result
             })
-        })
+        }))
     }
 
     componentDidMount = () => {
@@ -26,6 +29,10 @@ export default class DoctoresComponent extends Component {
     componentDidUpdate = (oldProps) => {
         if (oldProps.idhospital != this.props.idhospital) {
             this.cargarDoctores();
+
+            this.setState({
+                idDoctor: "" //Lo devuelvo a "" para quitarlo cuando marquemos un nuevo hospital
+            });
         }
     }
 
@@ -33,7 +40,12 @@ export default class DoctoresComponent extends Component {
         return (
             <div>
                 <h1>Doctores del hospital {this.props.idhospital}</h1>
-                <DetallesDoctor />
+                {
+                    this.state.idDoctor != "" && (
+                        <DetallesDoctor idDoctor={this.state.idDoctor} />
+                    )
+                }
+                <h3>Doctores</h3>
                 <table className='table table-primary'>
                     <thead>
                         <tr>
@@ -48,12 +60,16 @@ export default class DoctoresComponent extends Component {
                         {
                             this.state.doctores.map((doct, index) => {
                                 return (
-                                    <tr>
-                                        <td key={index} idDoctor={doct.idDoctor}>{doct.apellido}</td>
-                                        <td key={index} idDoctor={doct.idDoctor}>{doct.especialidad}</td>
-                                        <td key={index} idDoctor={doct.idDoctor}>{doct.salario}</td>
-                                        <td key={index} idDoctor={doct.idDoctor}>{doct.idHospital}</td>
-                                        <td><button>Observar Detalles</button></td>
+                                    <tr key={index}>
+                                        <td idDoctor={doct.idDoctor}>{doct.apellido}</td>
+                                        <td idDoctor={doct.idDoctor}>{doct.especialidad}</td>
+                                        <td idDoctor={doct.idDoctor}>{doct.salario}</td>
+                                        <td idDoctor={doct.idDoctor}>{doct.idHospital}</td>
+                                        <td><button onClick={() => {
+                                            this.setState({
+                                                idDoctor: doct.idDoctor
+                                            })
+                                        }}>Observar Detalles</button></td>
                                     </tr>
                                 )
                             })
